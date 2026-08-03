@@ -1,0 +1,16 @@
+mode: teachable # teachable | automated | scalable
+
+paths:
+  raw: data/raw
+  snapshots: data/snapshots
+  meta: data/meta
+
+contracts:
+  portfolio: v1
+  scala: v1
+  paris: v1
+
+automation:
+  auto_commit: true
+  apply_writes: false
+  retention_days: 30

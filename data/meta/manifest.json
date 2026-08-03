@@ -1,0 +1,24 @@
+{
+  "mode": "teachable",
+  "updatedAt": "2026-08-03T16:46:45.135Z",
+  "snapshots": [
+    {
+      "key": "portfolio",
+      "source": "none",
+      "output": "/workspaces/ichigo-noir-mode/data/snapshots/portfolio-catalog.json",
+      "count": 0
+    },
+    {
+      "key": "scala",
+      "source": "none",
+      "output": "/workspaces/ichigo-noir-mode/data/snapshots/scala-candidates.json",
+      "count": 0
+    },
+    {
+      "key": "paris",
+      "source": "none",
+      "output": "/workspaces/ichigo-noir-mode/data/snapshots/paris-standard.json",
+      "count": 0
+    }
+  ]
+}

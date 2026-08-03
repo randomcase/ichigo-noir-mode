@@ -1,0 +1,49 @@
+name: data-sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "11 4 * * *"
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install deps
+        run: npm install yaml
+
+      - name: Placeholder raw ingest
+        run: |
+          mkdir -p data/raw
+          ts=$(date -u +%Y-%m-%dT%H%M%SZ)
+          test -f data/raw/portfolio-$ts.json || echo '{"repos":[]}' > data/raw/portfolio-$ts.json
+          test -f data/raw/scala-$ts.json || echo '{"repos":[]}' > data/raw/scala-$ts.json
+          test -f data/raw/paris-$ts.json || echo '{"repos":[]}' > data/raw/paris-$ts.json
+
+      - name: Normalize
+        run: node scripts/normalize.mjs
+
+      - name: Ledger stub append
+        run: |
+          mkdir -p data
+          test -f data/evidence-log.md || echo -e "# Evidence Log\n" > data/evidence-log.md
+          echo "- $(date -u +%F) data-sync run completed (mode from config/modes.yml)" >> data/evidence-log.md
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "chore(data): automated sync + normalize"
+          git push
