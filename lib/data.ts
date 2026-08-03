@@ -1,25 +1,21 @@
-import fs from "node:fs";
 import path from "node:path";
+
+import { readJsonFile } from "@/lib/read-json";
 
 import type { Catalog } from "./types";
 
-function readJson<T>(relPath: string, fallback: T): T {
-  const absolutePath = path.join(process.cwd(), relPath);
-  if (!fs.existsSync(absolutePath)) {
-    return fallback;
-  }
-
-  return JSON.parse(fs.readFileSync(absolutePath, "utf8")) as T;
+function p(...x: string[]) {
+  return path.join(process.cwd(), ...x);
 }
 
 export function getPortfolio(): Catalog {
-  return readJson<Catalog>("data/portfolio-catalog.json", { repos: [] });
+  return readJsonFile<Catalog>(p("data/snapshots/portfolio-catalog.json"), { repos: [] }, 10_000);
 }
 
 export function getScala(): Catalog {
-  return readJson<Catalog>("data/scala-candidates.json", { repos: [] });
+  return readJsonFile<Catalog>(p("data/snapshots/scala-candidates.json"), { repos: [] }, 10_000);
 }
 
 export function getParis(): Catalog {
-  return readJson<Catalog>("data/paris-standard.json", { repos: [] });
+  return readJsonFile<Catalog>(p("data/snapshots/paris-standard.json"), { repos: [] }, 10_000);
 }

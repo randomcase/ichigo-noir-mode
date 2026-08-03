@@ -1,0 +1,25 @@
+defaults:
+  mode: symbolic
+  apply_writes: false
+  allow_physical_actions: false
+  max_changes_per_request: 1
+  dry_run_default: true
+
+performance:
+  snapshot_max_mb: 2
+  stale_hours_warning: 24
+  operations_rows_limit: 200
+
+actions:
+  set_active:
+    target_state: active
+    symbolic_only: true
+  symbolic_deprecate:
+    target_state: deprecated
+    symbolic_only: true
+  symbolic_archive:
+    target_state: archived
+    symbolic_only: true
+  symbolic_delete:
+    target_state: delete_candidate
+    symbolic_only: true
