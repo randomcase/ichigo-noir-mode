@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Portfolio Snapshot v1",
+  "type": "object",
+  "required": ["repos"],
+  "properties": {
+    "repos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "url", "language", "stars", "daysSinceUpdate", "classification"],
+        "properties": {
+          "name": { "type": "string" },
+          "url": { "type": "string" },
+          "language": { "type": "string" },
+          "stars": { "type": "number" },
+          "daysSinceUpdate": { "type": "number" },
+          "classification": { "type": "string" }
+        }
+      }
+    }
+  }
+}

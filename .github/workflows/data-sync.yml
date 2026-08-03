@@ -1,0 +1,40 @@
+name: data-sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "11 4 * * *"
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: data-sync-main
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Normalize
+        run: node scripts/normalize.mjs
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "chore(data): sync snapshots"
+          git push
