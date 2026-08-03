@@ -19,6 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <a href="/portfolio">Portfolio</a>
             <a href="/scala">Scala</a>
             <a href="/paris">Paris Standard</a>
+            <a href="/operations">Operations</a>
             <a href="/ledger">Ledger</a>
           </nav>
         </header>
