@@ -1,0 +1,44 @@
+# Daily — the same task for every agent. One profile, one alignment, one report.
+name: Daily
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  # 1. pull the one profile. This repo's own token writes it here.
+  doctrine:
+    uses: zavi-peacock-edna/.github/.github/workflows/sync-doctrine.yml@main
+    with:
+      source_repo: zavi-peacock-edna/doctrine
+
+  # 2. cast the day, and declare before acting.
+  horoscope:
+    runs-on: ubuntu-latest
+    env: { GH_TOKEN: "${{ github.token }}" }
+    steps:
+      - name: alpha — declare
+        run: |
+          echo "legate:  ${{ github.repository }}"
+          echo "bucket:  opened, denominator=day, entries=0"
+      - name: the day
+        run: |
+          curl -fsSL -o align.js \
+            https://raw.githubusercontent.com/zavi-peacock-edna/doctrine/main/tools/align.js || exit 0
+          node align.js > horoscope.json
+          node -e "const d=require('./horoscope.json');
+            console.log('');
+            console.log('  '+d.date+'   '+d.alignment.sign+' '+d.alignment.degree_in_sign+'deg   '+d.alignment.prime_star+'   '+d.alignment.hue);
+            console.log('  moon '+d.moon.phase+'  '+d.moon.age_days+'d  '+(d.moon.illuminated*100).toFixed(1)+'% lit');
+            console.log('  province: '+d.province.tokens.toLocaleString()+' tokens, '+d.province.per_spoke.toLocaleString()+' per spoke, '+d.province.strand+' strand');
+            console.log('  200yr: star '+d.projection_200yr.star_moves_arcmin+' arcmin, frame '+d.projection_200yr.frame_precesses_deg+' deg, frame faster by '+d.projection_200yr.frame_faster_by+'x');
+            console.log('');
+            console.log('  '+d.province.note);
+            console.log('  '+d.known_gap);"
+      - name: omega — seal
+        run: |
+          echo "coverage:   this legate measured only its own province."
+          echo "unverified: no verification lane of its own — it cannot check itself, by design."
+          echo "open:       report filed to the operator, who collects. Never self."
